@@ -27,7 +27,7 @@ http-schema/
 │       ├── specs/
 │       └── plans/
 ├── packages/
-│   └── http-schema/                # 原根目录代码搬到这里
+│   └── core/                        # 原根目录代码搬到这里
 │       ├── package.json            # @jswork/http-schema
 │       ├── tsconfig.json
 │       ├── tsup.config.ts
@@ -94,9 +94,9 @@ packages:
 }
 ```
 
-### packages/http-schema/package.json
+### packages/core/package.json
 
-保持现有 `@jswork/http-schema` 的 `package.json` 不变，路径变为 `packages/http-schema/`。
+保持现有 `@jswork/http-schema` 的 `package.json` 不变，路径变为 `packages/core/`。
 
 ### apps/example/schema.ts
 
@@ -193,8 +193,8 @@ pnpm example
 ## 迁移步骤
 
 1. 在根目录创建 `pnpm-workspace.yaml`
-2. 创建 `packages/` 目录，将 `src/`, `__tests__/`, `tsconfig.json`, `tsup.config.ts`, `package.json` 移入 `packages/http-schema/`
-3. 创建 `packages/http-schema/.gitignore`（dist/ 等）
+2. 创建 `packages/` 目录，将 `src/`, `__tests__/`, `tsconfig.json`, `tsup.config.ts`, `package.json` 移入 `packages/core/`
+3. 创建 `packages/core/.gitignore`（dist/ 等）
 4. 更新根 `package.json` 为 private orchestration
 5. 创建 `apps/example/` 目录及所有文件
 6. 更新 `README.md` 和 `llms.txt` 中的路径
@@ -205,11 +205,11 @@ pnpm example
 |------|------|
 | `pnpm-workspace.yaml` | workspace 配置 |
 | `package.json` | 根编排脚本（private） |
-| `packages/http-schema/package.json` | @jswork/http-schema 子包 |
-| `packages/http-schema/src/` | 源码 |
-| `packages/http-schema/__tests__/` | 测试 |
-| `packages/http-schema/tsconfig.json` | TS 配置 |
-| `packages/http-schema/tsup.config.ts` | 构建配置 |
+| `packages/core/package.json` | @jswork/http-schema 子包 |
+| `packages/core/src/` | 源码 |
+| `packages/core/__tests__/` | 测试 |
+| `packages/core/tsconfig.json` | TS 配置 |
+| `packages/core/tsup.config.ts` | 构建配置 |
 | `apps/example/package.json` | 示例子包依赖 + 脚本 |
 | `apps/example/index.html` | Vite 入口 HTML |
 | `apps/example/vite.config.ts` | Vite 配置（proxy） |
