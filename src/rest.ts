@@ -52,11 +52,22 @@ export function normalizeResources(
     } else {
       name = res.name;
       prefix = res.prefix ?? parentPrefix;
-      actions = res.only
-        ? ALL_ACTIONS.filter((a) => res.only!.includes(a))
-        : res.except
-          ? ALL_ACTIONS.filter((a) => !res.except!.includes(a))
-          : [...ALL_ACTIONS];
+
+      if (res.only) {
+        const unknown = res.only.filter((a) => !ALL_ACTIONS.includes(a));
+        if (unknown.length) {
+          throw new Error(`Unknown action(s) in only: ${unknown.join(', ')}. Valid actions: ${ALL_ACTIONS.join(', ')}`);
+        }
+        actions = ALL_ACTIONS.filter((a) => res.only!.includes(a));
+      } else if (res.except) {
+        const unknown = res.except.filter((a) => !ALL_ACTIONS.includes(a));
+        if (unknown.length) {
+          throw new Error(`Unknown action(s) in except: ${unknown.join(', ')}. Valid actions: ${ALL_ACTIONS.join(', ')}`);
+        }
+        actions = ALL_ACTIONS.filter((a) => !res.except!.includes(a));
+      } else {
+        actions = [...ALL_ACTIONS];
+      }
     }
 
     Object.assign(result, expandResource(name, actions, prefix, suffix));

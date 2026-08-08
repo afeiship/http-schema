@@ -28,13 +28,23 @@ describe('normalizeResources', () => {
 
   it('should apply prefix and suffix to function names', () => {
     const result = normalizeResources(['tags'], 'v1_', 'Api');
-    // 所有 key 都应包含前后缀
-    Object.keys(result).forEach(key => {
-      expect(key.startsWith('v1_')).toBe(true);
-      expect(key.endsWith('Api')).toBe(true);
-    });
-    // 验证展开后的 action 数量
-    expect(Object.keys(result).length).toBe(5);
+    expect(Object.keys(result)).toEqual([
+      'v1_tags_indexApi',
+      'v1_tags_showApi',
+      'v1_tags_createApi',
+      'v1_tags_updateApi',
+      'v1_tags_destroyApi',
+    ]);
+  });
+
+  it('should honor resource-level prefix override', () => {
+    const result = normalizeResources([{ name: 'users', prefix: 'p_' }], 'v1_', '');
+    expect(Object.keys(result)[0]).toBe('p_users_index');
+  });
+
+  it('should throw on unknown action in only', () => {
+    expect(() => normalizeResources([{ name: 'users', only: ['shwo'] }], '', ''))
+      .toThrow(/Unknown action/);
   });
 
   it('should handle multiple resources', () => {
