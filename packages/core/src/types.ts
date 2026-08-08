@@ -1,11 +1,11 @@
-import type { DataType, InterceptorLike, Adapter } from '@jswork/universal-request-core';
-export type { DataType, InterceptorLike, Adapter };
+import type { DataType, InterceptorLike, Adapter, RequestConfig } from '@jswork/universal-request-core';
+export type { DataType, InterceptorLike, Adapter, RequestConfig };
 
-// DSL 叶子接口：name: [method, path, meta?]
+// DSL 叶子接口：name: [method, path, config?]
 export type HttpSchemaLeaf = [
   method: string,
   path: string,
-  meta?: Record<string, any>
+  config?: Partial<RequestConfig>
 ];
 
 // 叶子记录的键值对
@@ -27,6 +27,7 @@ export interface HttpSchemaItem {
   baseURL?: string;
   prefix?: string;
   suffix?: string;
+  config?: Partial<RequestConfig>;
   resources?: (string | ResourceDef)[];
   items?: HttpSchemaItems;
 }
@@ -48,7 +49,7 @@ export interface ApiItem {
   fullPath: string;
   dataType: DataType;
   baseURL: string;
-  meta?: Record<string, any>;
+  config?: Partial<RequestConfig>;
 }
 
 // http-schema 选项
