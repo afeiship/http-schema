@@ -1,7 +1,5 @@
 import { createRequest } from '@jswork/universal-request-core';
 import type { RequestConfig } from '@jswork/universal-request-core';
-import { FetchAdapter } from '@jswork/universal-request-adapter-fetch';
-import { AxiosAdapter } from '@jswork/universal-request-adapter-axios';
 import { parse } from '@jswork/path-dual-parser';
 import type { ApiItem, ApiInstance, HttpSchemaConfig, HttpSchemaOptions } from './types';
 import { parse as parseSchema } from './parser';
@@ -54,16 +52,20 @@ function httpSchema(
   // 1. 解析 DSL → 扁平 ApiItem[]
   const items = parseSchema(schema);
 
-  // 2. 创建 RequestCore 实例
+  // 2. 校验 adapter 必须传入
+  if (!options?.adapter) {
+    throw new Error('httpSchema: adapter is required (e.g. new FetchAdapter())');
+  }
+
+  // 3. 创建 RequestCore 实例
   const baseURL = options?.baseURL ?? schema.baseURL ?? '';
-  const adapter = options?.adapter === 'Axios' ? new AxiosAdapter() : new FetchAdapter();
   const httpClient = createRequest({
     baseURL,
-    adapter,
+    adapter: options.adapter,
     interceptors: options?.interceptors,
   });
 
-  // 3. 构建 api 实例
+  // 4. 构建 api 实例
   const api: ApiInstance = {};
 
   items.forEach((item: ApiItem) => {

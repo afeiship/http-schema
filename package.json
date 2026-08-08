@@ -20,6 +20,7 @@
   "devDependencies": {
     "@jswork/style-guide": "^1.0.3",
     "@jswork/tsup-banner": "^1.0.4",
+    "@jswork/universal-request-adapter-fetch": "^1.0.8",
     "@swc/core": "^1.5.5",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.11",
@@ -41,8 +42,6 @@
   ],
   "dependencies": {
     "@jswork/path-dual-parser": "^1.0.2",
-    "@jswork/universal-request-adapter-axios": "^1.0.7",
-    "@jswork/universal-request-adapter-fetch": "^1.0.8",
     "@jswork/universal-request-core": "^1.0.8"
   }
 }

@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'bun:test';
+import { FetchAdapter } from '@jswork/universal-request-adapter-fetch';
 import httpSchema from '../src/index';
 import type { HttpSchemaConfig } from '../src/types';
 
@@ -11,7 +12,7 @@ describe('httpSchema', () => {
         ping: ['get', '/ping'],
       }
     };
-    const api = httpSchema(config);
+    const api = httpSchema(config, { adapter: new FetchAdapter() });
     expect(api).toHaveProperty('ping');
     expect(typeof api.ping).toBe('function');
   });
@@ -36,7 +37,7 @@ describe('httpSchema', () => {
         }
       ]
     };
-    const api = httpSchema(config);
+    const api = httpSchema(config, { adapter: new FetchAdapter() });
     expect(api).toHaveProperty('login');
     expect(api).toHaveProperty('profile');
     expect(api).toHaveProperty('tags_index');
@@ -45,7 +46,7 @@ describe('httpSchema', () => {
   });
 
   it('should handle empty schema', () => {
-    const api = httpSchema({});
+    const api = httpSchema({}, { adapter: new FetchAdapter() });
     expect(api).toEqual({});
   });
 
@@ -58,20 +59,13 @@ describe('httpSchema', () => {
     const api = httpSchema(config, {
       baseURL: 'http://override.com',
       dataType: 'json',
+      adapter: new FetchAdapter(),
     });
     expect(api).toHaveProperty('ping');
   });
 
-  it('should support Axios adapter option', () => {
-    const config: HttpSchemaConfig = {
-      items: {
-        ping: ['get', '/ping'],
-      }
-    };
-    const api = httpSchema(config, {
-      adapter: 'Axios',
-    });
-    expect(api).toHaveProperty('ping');
-    expect(typeof api.ping).toBe('function');
+  it('should throw when adapter is missing', () => {
+    expect(() => httpSchema({ items: { ping: ['get', '/ping'] } }))
+      .toThrow(/adapter is required/);
   });
 });
