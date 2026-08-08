@@ -6,14 +6,24 @@ import { parse as parseSchema } from './parser';
 
 /**
  * 从路径中提取模板参数名
+ * 支持 {param} 和 :param 两种语法
  */
 function extractParams(path: string): string[] {
   const params: string[] = [];
-  const re = /\{(\w+)\}/g;
+  // 匹配 {param} 和 :param 两种风格
+  const braceRe = /\{(\w+)\}/g;
+  const colonRe = /:(\w+)/g;
   let match: RegExpExecArray | null;
-  while ((match = re.exec(path)) !== null) {
+
+  while ((match = braceRe.exec(path)) !== null) {
     params.push(match[1]);
   }
+  while ((match = colonRe.exec(path)) !== null) {
+    if (!params.includes(match[1])) {
+      params.push(match[1]);
+    }
+  }
+
   return params;
 }
 

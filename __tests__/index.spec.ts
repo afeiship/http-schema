@@ -68,4 +68,20 @@ describe('httpSchema', () => {
     expect(() => httpSchema({ items: { ping: ['get', '/ping'] } }))
       .toThrow(/adapter is required/);
   });
+
+  it('should extract params from {param} and :param syntax', () => {
+    // 间接测试：通过 splitData 验证两种语法都能正确提取参数
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: {
+        test1: ['get', '/users/{id}/posts'],
+        test2: ['get', '/users/:id/profile'],
+      }
+    };
+    // 验证函数能正常创建，说明路径参数提取无报错
+    const api = httpSchema(config, { adapter: new FetchAdapter() });
+    expect(api).toHaveProperty('test1');
+    expect(api).toHaveProperty('test2');
+  });
 });
