@@ -7,4 +7,8 @@ const api = httpSchema(schema, {
   transformResponse: (res) => res.data,
 });
 
+// debug
+// @ts-ignore
+window.api = api;
+
 export default api;

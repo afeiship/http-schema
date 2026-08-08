@@ -80,9 +80,13 @@ function httpSchema(
 
   items.forEach((item: ApiItem) => {
     api[item.name] = (data?: any, callOptions?: Record<string, any>) => {
-      // 替换路径占位符
+      // 替换路径占位符（path-to-regexp v8 需要 string 值）
       const [params, payload] = splitData(item.fullPath, data);
-      const resolvedPath = parse(item.fullPath, params);
+      const stringParams: Record<string, string> = {};
+      for (const [k, v] of Object.entries(params)) {
+        stringParams[k] = String(v);
+      }
+      const resolvedPath = parse(item.fullPath, stringParams);
 
       // 构建请求配置
       const config: RequestConfig = {
