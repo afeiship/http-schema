@@ -6,13 +6,14 @@
   "scripts": {
     "dev": "run-p server client",
     "client": "vite",
-    "server": "json-server --watch server/db.json --port 3001 < /dev/null",
+    "server": "json-server --watch server/db.json --routes server/routes.json --port 3001 < /dev/null",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "@jswork/http-schema": "workspace:*",
     "@jswork/universal-request-adapter-fetch": "^1.0.8",
+    "@jswork/universal-request-core": "^1.0.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

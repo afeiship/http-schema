@@ -1,0 +1,4 @@
+{
+  "/categories/root": "/categories?root=true",
+  "/badges/top": "/badges?_limit=3"
+}
