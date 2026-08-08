@@ -39,6 +39,7 @@ export type HttpSchemaItems = HttpSchemaItem[] | HttpSchemaLeafRecord;
 export interface HttpSchemaConfig {
   baseURL?: string;
   request?: [string, DataType];
+  config?: Partial<RequestConfig>;
   items?: HttpSchemaItems;
 }
 

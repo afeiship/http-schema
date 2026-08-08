@@ -6,6 +6,7 @@ import type {
   HttpSchemaLeafRecord,
   ApiItem,
   DataType,
+  RequestConfig,
 } from './types';
 import { normalizeResources } from './rest';
 
@@ -16,6 +17,7 @@ interface ParseContext {
   dataType: DataType;
   namePrefix: string;   // 函数名前缀
   nameSuffix: string;   // 函数名后缀
+  config: Partial<RequestConfig>;
 }
 
 /**
@@ -52,6 +54,7 @@ function parseItems(
         dataType: item.request?.[1] ?? ctx.dataType,
         namePrefix: item.prefix ?? ctx.namePrefix,
         nameSuffix: item.suffix ?? ctx.nameSuffix,
+        config: item.config ? { ...ctx.config, ...item.config } : ctx.config,
       };
 
       // 展开 resources（不传 namePrefix/nameSuffix，叶子分支统一处理）
@@ -66,16 +69,19 @@ function parseItems(
   } else {
     // 对象：叶子节点
     Object.entries(items).forEach(([key, leaf]) => {
-      const [method, path, meta] = leaf as HttpSchemaLeaf;
+      const [method, path, leafConfig] = leaf as HttpSchemaLeaf;
       const name = ctx.namePrefix + key + ctx.nameSuffix;
       const fullPath = joinPaths(ctx.prefix, path);
+      const mergedConfig = leafConfig
+        ? { ...ctx.config, ...leafConfig }
+        : ctx.config;
       result.push({
         name,
         method: method.toLowerCase(),
         fullPath,
         dataType: ctx.dataType,
         baseURL: ctx.baseURL,
-        meta,
+        config: mergedConfig,
       });
     });
   }
@@ -95,6 +101,7 @@ export function parse(config: HttpSchemaConfig): ApiItem[] {
     dataType: config.request?.[1] ?? 'json',
     namePrefix: '',
     nameSuffix: '',
+    config: config.config ?? {},
   };
 
   return parseItems(config.items, ctx);
