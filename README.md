@@ -109,6 +109,20 @@ interface HttpSchemaConfig {
 }
 ```
 
+## Monorepo Structure
+
+```
+http-schema/
+├── packages/
+│   └── core/          # Core library (@jswork/http-schema)
+│       ├── src/       # Source code
+│       ├── __tests__/ # Tests
+│       └── package.json
+├── apps/
+│   └── example/       # Demo application (Vite + React)
+└── docs/              # Specifications and design docs
+```
+
 ## license
 Code released under [the MIT license](https://github.com/afeiship/http-schema/blob/main/LICENSE.txt).
 

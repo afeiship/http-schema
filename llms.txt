@@ -15,13 +15,13 @@
 
 ## Source
 
-- [Entry Point](src/index.ts): Main httpSchema() function, request builder
-- [Parser](src/parser.ts): Recursive DSL parser, items tree -> ApiItem[]
-- [Resources](src/rest.ts): Resources CRUD expansion (normalizeResources)
-- [Types](src/types.ts): Full TypeScript type definitions
+- [Entry Point](packages/core/src/index.ts): Main httpSchema() function, request builder
+- [Parser](packages/core/src/parser.ts): Recursive DSL parser, items tree -> ApiItem[]
+- [Resources](packages/core/src/rest.ts): Resources CRUD expansion (normalizeResources)
+- [Types](packages/core/src/types.ts): Full TypeScript type definitions
 
 ## Optional
 
-- [Examples](__tests__/index.spec.ts): Integration test examples
-- [Parser Tests](__tests__/parser.spec.ts): Parser edge case tests
-- [Resources Tests](__tests__/rest.spec.ts): Resources expansion tests
+- [Examples](packages/core/__tests__/index.spec.ts): Integration test examples
+- [Parser Tests](packages/core/__tests__/parser.spec.ts): Parser edge case tests
+- [Resources Tests](packages/core/__tests__/rest.spec.ts): Resources expansion tests
