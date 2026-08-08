@@ -1,7 +1,17 @@
 import { describe, it, expect } from 'bun:test';
 import { FetchAdapter } from '@jswork/universal-request-adapter-fetch';
+import type { RequestConfig } from '@jswork/universal-request-core';
 import httpSchema from '../src/index';
 import type { HttpSchemaConfig } from '../src/types';
+
+// 自定义适配器，用于捕获请求配置
+class CaptureAdapter extends FetchAdapter {
+  public lastConfig: RequestConfig | null = null;
+  async request(config: RequestConfig): Promise<any> {
+    this.lastConfig = config;
+    return { data: { ok: true }, status: 200, statusText: 'OK', headers: {}, config };
+  }
+}
 
 describe('httpSchema', () => {
   it('should return an object with api functions', () => {
@@ -83,5 +93,19 @@ describe('httpSchema', () => {
     const api = httpSchema(config, { adapter: new FetchAdapter() });
     expect(api).toHaveProperty('test1');
     expect(api).toHaveProperty('test2');
+  });
+
+  it('should pass meta from schema to request config', async () => {
+    const adapter = new CaptureAdapter();
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: {
+        categories_root: ['get', '/categories/root', { tags: ['ni2lv'] }],
+      }
+    };
+    const api = httpSchema(config, { adapter });
+    await api.categories_root();
+    expect(adapter.lastConfig?.meta).toEqual({ tags: ['ni2lv'] });
   });
 });
