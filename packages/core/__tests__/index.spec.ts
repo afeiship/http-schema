@@ -106,6 +106,6 @@ describe('httpSchema', () => {
     };
     const api = httpSchema(config, { adapter });
     await api.categories_root();
-    expect(adapter.lastConfig?.meta).toEqual({ tags: ['ni2lv'] });
+    expect(adapter.lastConfig?.tags).toEqual(['ni2lv']);
   });
 });

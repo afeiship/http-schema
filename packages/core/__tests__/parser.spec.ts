@@ -24,7 +24,7 @@ describe('parse', () => {
     expect(result[1].name).toBe('echo');
     expect(result[1].method).toBe('post');
     expect(result[1].fullPath).toBe('/api/echo');
-    expect(result[1].meta).toEqual({ tags: ['test'] });
+    expect(result[1].config).toEqual({ tags: ['test'] });
   });
 
   it('should handle nested groups with request inheritance', () => {
@@ -145,5 +145,53 @@ describe('parse', () => {
     expect(result.find(r => r.name === 'admin_admin_tags_indexV2V2')).toBeUndefined();
     // 同时验证 resources 展开数量正确（5 + 1）
     expect(result.length).toBe(6);
+  });
+
+  it('should merge config from parent group and leaf', () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [{
+        config: { timeout: 3000, headers: { 'X-Auth': 'group' } },
+        items: {
+          foo: ['get', '/foo', { timeout: 5000, meta: { tags: ['paginate'] } }],
+        }
+      }]
+    };
+    const result = parse(config);
+    expect(result).toHaveLength(1);
+    expect(result[0].config).toEqual({
+      timeout: 5000,
+      headers: { 'X-Auth': 'group' },
+      meta: { tags: ['paginate'] },
+    });
+  });
+
+  it('should inherit parent config when leaf has no config', () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [{
+        config: { timeout: 3000 },
+        items: {
+          bar: ['get', '/bar'],
+        }
+      }]
+    };
+    const result = parse(config);
+    expect(result[0].config).toEqual({ timeout: 3000 });
+  });
+
+  it('should handle root-level config', () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      config: { timeout: 1000 },
+      items: {
+        ping: ['get', '/ping'],
+      }
+    };
+    const result = parse(config);
+    expect(result[0].config).toEqual({ timeout: 1000 });
   });
 });
