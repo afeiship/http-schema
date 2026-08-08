@@ -9,8 +9,8 @@ export default {
       request: ['', 'json'],
       items: {
         me: ['get', '/me'],
-        categories_root: ['get', '/categories/root', { meta: { tags: ['paginate'] } }],
-        badges_top: ['get', '/badges/top', { meta: { tags: ['paginate'], pageSize: 3 } }],
+        categories_root: ['get', '/categories/root', { tags: ['paginate'] }],
+        badges_top: ['get', '/badges/top', { tags: ['paginate'], meta: { pageSize: 3 } }],
       },
     },
   ],

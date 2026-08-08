@@ -3,7 +3,7 @@ import type { Response } from '@jswork/universal-request-core';
 export const tagTransformInterceptor = () => ({
   id: 'tag-transform',
   response: (res: Response) => {
-    const tags = res.config?.meta?.tags as string[] | undefined;
+    const tags = res.config?.tags as string[] | undefined;
     if (!tags || !tags.length) return res;
 
     if (tags.includes('ni2lv')) {

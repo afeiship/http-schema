@@ -14,11 +14,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/core
       '@jswork/universal-request-adapter-fetch':
-        specifier: ^1.0.10
-        version: 1.0.10(@jswork/universal-request-core@1.0.10)
+        specifier: ^1.0.11
+        version: 1.0.11(@jswork/universal-request-core@1.0.11)
       '@jswork/universal-request-core':
-        specifier: ^1.0.10
-        version: 1.0.10
+        specifier: ^1.0.11
+        version: 1.0.11
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -57,8 +57,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2
       '@jswork/universal-request-core':
-        specifier: ^1.0.8
-        version: 1.0.8
+        specifier: ^1.0.11
+        version: 1.0.11
     devDependencies:
       '@jswork/style-guide':
         specifier: ^1.0.3
@@ -67,8 +67,8 @@ importers:
         specifier: ^1.0.4
         version: 1.0.13
       '@jswork/universal-request-adapter-fetch':
-        specifier: ^1.0.8
-        version: 1.0.8(@jswork/universal-request-core@1.0.8)
+        specifier: ^1.0.11
+        version: 1.0.11(@jswork/universal-request-core@1.0.11)
       '@swc/core':
         specifier: ^1.5.5
         version: 1.15.47
@@ -532,21 +532,13 @@ packages:
   '@jswork/tsup-banner@1.0.13':
     resolution: {integrity: sha512-a7JyFkOH/jt+mvETRkSDPglMCkUl14gsDmkL0vxpOPtkS0Pu6n96qkde1M4HlNOxMYxAwrK5aQYaXxSKThaSvA==}
 
-  '@jswork/universal-request-adapter-fetch@1.0.10':
-    resolution: {integrity: sha512-IHYiiMSS8uzGj5G63HDw2fnRvzzMPEmAzZc5PNUHQP3hlvyIuctZmGk+Hv6l26cEUczE/K5y3JEZQa0zu8b69A==}
+  '@jswork/universal-request-adapter-fetch@1.0.11':
+    resolution: {integrity: sha512-53XscwOeR3GJcchyFRB7q1oRz/QW8f+tJa6ANJxOzldC9pQDiUgIb77nnLDdGCWJCLV1/cBKUlTQtfj0vmrtyA==}
     peerDependencies:
       '@jswork/universal-request-core': ^1.0.0
 
-  '@jswork/universal-request-adapter-fetch@1.0.8':
-    resolution: {integrity: sha512-ZCZr9k2P1kND2C4jFOZPzfSSMqLjsTEHip5awenve2JLRh+wr1wJ9RUHk0iIYiRSAD4NBdpEynD/0jh0GGy92w==}
-    peerDependencies:
-      '@jswork/universal-request-core': ^1.0.0
-
-  '@jswork/universal-request-core@1.0.10':
-    resolution: {integrity: sha512-BKL2ai0/gZk4x1aLf1/zKkf/2YvQZfDUuWmZCiVPDNspN5+zOz8Vo+Ej5CbUW6YmUa5nX26jT47a0VInqqvyeg==}
-
-  '@jswork/universal-request-core@1.0.8':
-    resolution: {integrity: sha512-NWIdFgr9EexZAy4M+cslatBpuBRTP0hlCs+FXmBftXz5tXQaSIJJvjF01i6hHQCyU1aUDFZlqGRw449ejhST/Q==}
+  '@jswork/universal-request-core@1.0.11':
+    resolution: {integrity: sha512-AvJOv04CX54l+oSoZg7fsBUiyKNYtHdwK1AI0tnnoBwPhj6+boYF239tHWr9gTA1zXHRVphxyFqa0WZ9S1P/SQ==}
 
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     resolution: {integrity: sha512-oTXEIha4SsuXdTA4Iyskj0kpdx2yVXdhd75c2v3xGrHFfVMsbhTPZU/nMPL4sWKo4pBHm3aucLaqGlF696dTyQ==}
@@ -2503,19 +2495,11 @@ snapshots:
       '@jswork/banner-defaults': 1.1.10
       '@jswork/nice-comments': 1.0.4
 
-  '@jswork/universal-request-adapter-fetch@1.0.10(@jswork/universal-request-core@1.0.10)':
+  '@jswork/universal-request-adapter-fetch@1.0.11(@jswork/universal-request-core@1.0.11)':
     dependencies:
-      '@jswork/universal-request-core': 1.0.10
+      '@jswork/universal-request-core': 1.0.11
 
-  '@jswork/universal-request-adapter-fetch@1.0.8(@jswork/universal-request-core@1.0.8)':
-    dependencies:
-      '@jswork/universal-request-core': 1.0.8
-
-  '@jswork/universal-request-core@1.0.10':
-    dependencies:
-      '@jswork/pipe': 1.1.2
-
-  '@jswork/universal-request-core@1.0.8':
+  '@jswork/universal-request-core@1.0.11':
     dependencies:
       '@jswork/pipe': 1.1.2
 
