@@ -1,4 +1,4 @@
-import { createRequest, RequestCore } from '@jswork/universal-request-core';
+import { createRequest } from '@jswork/universal-request-core';
 import { FetchAdapter } from '@jswork/universal-request-adapter-fetch';
 import { parse } from '@jswork/path-dual-parser';
 import type { ApiItem, ApiInstance, HttpSchemaConfig, HttpSchemaOptions } from './types';
@@ -42,13 +42,6 @@ function splitData(path: string, data: any): [Record<string, any>, any] {
 }
 
 /**
- * 判断一个方法是否使用 query string（GET/HEAD/DELETE）
- */
-function isQueryMethod(method: string): boolean {
-  return ['get', 'head', 'delete'].includes(method.toLowerCase());
-}
-
-/**
  * http-schema 入口
  * 输入 DSL 配置，输出可调用的扁平 api 实例
  */
@@ -84,14 +77,10 @@ function httpSchema(
         ...callOptions,
       };
 
-      // GET/HEAD/DELETE 的 payload 放到 query string
-      // 其他方法放到请求体
+      // GET/HEAD/DELETE 时 payload 由 adapter 作为 query string；
+      // 其他方法作为请求体。adapter 的 buildURL 已处理该路由。
       if (payload !== undefined) {
-        if (isQueryMethod(item.method)) {
-          config.params = payload;
-        } else {
-          config.payload = payload;
-        }
+        config.payload = payload;
       }
 
       // 发起请求
