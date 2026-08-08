@@ -1,5 +1,4 @@
-import type { DataType } from '@jswork/universal-request-core';
-import type { InterceptorLike } from '@jswork/universal-request-core';
+import type { DataType, InterceptorLike } from '@jswork/universal-request-core';
 
 // DSL 叶子接口：name: [method, path, meta?]
 export type HttpSchemaLeaf = [
@@ -46,7 +45,7 @@ export interface ApiItem {
   name: string;
   method: string;
   fullPath: string;
-  dataType: string;
+  dataType: DataType;
   baseURL: string;
   meta?: Record<string, any>;
 }

@@ -1,4 +1,5 @@
 import { createRequest } from '@jswork/universal-request-core';
+import type { RequestConfig } from '@jswork/universal-request-core';
 import { FetchAdapter } from '@jswork/universal-request-adapter-fetch';
 import { parse } from '@jswork/path-dual-parser';
 import type { ApiItem, ApiInstance, HttpSchemaConfig, HttpSchemaOptions } from './types';
@@ -70,10 +71,10 @@ function httpSchema(
       const resolvedPath = parse(item.fullPath, params);
 
       // 构建请求配置
-      const config: Record<string, any> = {
+      const config: RequestConfig = {
         url: resolvedPath,
-        method: item.method.toUpperCase(),
-        dataType: options?.dataType ?? item.dataType,
+        method: item.method.toUpperCase() as any,
+        dataType: (options?.dataType ?? item.dataType) as any,
         ...callOptions,
       };
 

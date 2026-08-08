@@ -5,6 +5,7 @@ import type {
   HttpSchemaLeaf,
   HttpSchemaLeafRecord,
   ApiItem,
+  DataType,
 } from './types';
 import { normalizeResources } from './rest';
 
@@ -12,7 +13,7 @@ import { normalizeResources } from './rest';
 interface ParseContext {
   baseURL: string;
   prefix: string;       // 路径前缀栈（request[0] 拼接）
-  dataType: string;
+  dataType: DataType;
   namePrefix: string;   // 函数名前缀
   nameSuffix: string;   // 函数名后缀
 }
