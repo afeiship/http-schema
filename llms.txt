@@ -1,0 +1,27 @@
+# http-schema
+
+> A parser for HTTP schema DSL. Declarative RESTful API configuration -> flat callable functions.
+
+## Documentation
+
+- [Main README](README.md): Project overview, installation, and usage guide
+- [DSL Requirements](docs/01-requirements.md): DSL syntax rules and examples
+- [Architecture Analysis](docs/02-old-xx-principle.md): Previous version architecture overview
+
+## Specifications
+
+- [Parser Design](docs/superpowers/specs/2026-08-08-http-schema-parser-design.md): Full parser architecture and design
+- [Adapter Refactor](docs/superpowers/specs/2026-08-08-http-schema-adapter-refactor.md): Adapter de-internalization design
+
+## Source
+
+- [Entry Point](src/index.ts): Main httpSchema() function, request builder
+- [Parser](src/parser.ts): Recursive DSL parser, items tree -> ApiItem[]
+- [Resources](src/rest.ts): Resources CRUD expansion (normalizeResources)
+- [Types](src/types.ts): Full TypeScript type definitions
+
+## Optional
+
+- [Examples](__tests__/index.spec.ts): Integration test examples
+- [Parser Tests](__tests__/parser.spec.ts): Parser edge case tests
+- [Resources Tests](__tests__/rest.spec.ts): Resources expansion tests
