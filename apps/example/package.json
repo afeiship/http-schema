@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@jswork/http-schema": "workspace:*",
-    "@jswork/universal-request-adapter-fetch": "^1.0.10",
-    "@jswork/universal-request-core": "^1.0.10",
+    "@jswork/universal-request-adapter-fetch": "^1.0.11",
+    "@jswork/universal-request-core": "^1.0.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
