@@ -1,18 +1,64 @@
-import fn from '../src';
+import { describe, it, expect } from 'bun:test';
+import httpSchema from '../src/index';
+import type { HttpSchemaConfig } from '../src/types';
 
-describe('Normal test cases', () => {
-  test('number is equal 0/10/100/1000/10000', () => {
-    expect(fn(0)).toEqual([0]);
-    expect(fn(10)).toEqual([10, 0]);
-    expect(fn(30)).toEqual([30, 0]);
-    expect(fn(40)).toEqual([40, 0]);
-    expect(fn(50)).toEqual([50, 0]);
-    expect(fn(60)).toEqual([60, 0]);
-    expect(fn(70)).toEqual([70, 0]);
-    expect(fn(80)).toEqual([80, 0]);
-    expect(fn(90)).toEqual([90, 0]);
-    expect(fn(100)).toEqual([100, 0, 0]);
-    expect(fn(1000)).toEqual([1000, 0, 0, 0]);
-    expect(fn(10000)).toEqual([10000, 0, 0, 0, 0]);
+describe('httpSchema', () => {
+  it('should return an object with api functions', () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: {
+        ping: ['get', '/ping'],
+      }
+    };
+    const api = httpSchema(config);
+    expect(api).toHaveProperty('ping');
+    expect(typeof api.ping).toBe('function');
+  });
+
+  it('should handle complex nested schema', () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [
+        {
+          request: ['/admin', 'json'],
+          items: {
+            login: ['post', '/auth'],
+            profile: ['get', '/me'],
+          }
+        },
+        {
+          resources: ['tags', 'posts'],
+          items: {
+            tags_top: ['get', '/tags/top'],
+          }
+        }
+      ]
+    };
+    const api = httpSchema(config);
+    expect(api).toHaveProperty('login');
+    expect(api).toHaveProperty('profile');
+    expect(api).toHaveProperty('tags_index');
+    expect(api).toHaveProperty('tags_top');
+    expect(api).toHaveProperty('posts_index');
+  });
+
+  it('should handle empty schema', () => {
+    const api = httpSchema({});
+    expect(api).toEqual({});
+  });
+
+  it('should work with options overrides', () => {
+    const config: HttpSchemaConfig = {
+      items: {
+        ping: ['get', '/ping'],
+      }
+    };
+    const api = httpSchema(config, {
+      baseURL: 'http://override.com',
+      dataType: 'json',
+    });
+    expect(api).toHaveProperty('ping');
   });
 });
