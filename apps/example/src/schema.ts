@@ -3,14 +3,14 @@ export default {
   request: ['', 'json'],
   items: [
     {
-      resources: ['badges', 'posts', 'categories'],
+      resources: ['badges', 'posts', 'categories', 'tags'],
     },
     {
       request: ['', 'json'],
       items: {
         me: ['get', '/me'],
-        categories_root: ['get', '/categories/root', { tags: ['ni2lv'] }],
-        badges_top: ['get', '/badges/top', { tags: ['featured'] }],
+        categories_root: ['get', '/categories/root', { tags: ['paginate'] }],
+        badges_top: ['get', '/badges/top', { tags: ['paginate'], pageSize: 3 }],
       },
     },
   ],
