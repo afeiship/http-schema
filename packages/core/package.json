@@ -36,9 +36,7 @@
   },
   "homepage": "https://js.work",
   "keywords": [
-    "http-schema",
-    "number",
-    "num"
+    "http-schema"
   ],
   "dependencies": {
     "@jswork/path-dual-parser": "^1.0.2",
