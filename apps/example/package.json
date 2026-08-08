@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"pnpm server\" \"pnpm client\"",
     "client": "vite",
-    "server": "json-server --watch server/db.json --port 3001",
+    "server": "json-server server/db.json --port 3001",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
