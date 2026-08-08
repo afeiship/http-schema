@@ -194,4 +194,24 @@ describe('parse', () => {
     const result = parse(config);
     expect(result[0].config).toEqual({ timeout: 1000 });
   });
+
+  it('should handle three-level config inheritance (root → group → leaf)', () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      config: { timeout: 1000, headers: { 'X-Auth': 'root' } },
+      items: [{
+        config: { headers: { 'X-Auth': 'group' } },
+        items: {
+          foo: ['get', '/foo', { meta: { tags: ['test'] } }],
+        }
+      }]
+    };
+    const result = parse(config);
+    expect(result[0].config).toEqual({
+      timeout: 1000,
+      headers: { 'X-Auth': 'group' },
+      meta: { tags: ['test'] },
+    });
+  });
 });

@@ -95,7 +95,7 @@ describe('httpSchema', () => {
     expect(api).toHaveProperty('test2');
   });
 
-  it('should pass meta from schema to request config', async () => {
+  it('should pass leaf config fields to request config', async () => {
     const adapter = new CaptureAdapter();
     const config: HttpSchemaConfig = {
       baseURL: 'http://test.com',
