@@ -61,4 +61,17 @@ describe('httpSchema', () => {
     });
     expect(api).toHaveProperty('ping');
   });
+
+  it('should support Axios adapter option', () => {
+    const config: HttpSchemaConfig = {
+      items: {
+        ping: ['get', '/ping'],
+      }
+    };
+    const api = httpSchema(config, {
+      adapter: 'Axios',
+    });
+    expect(api).toHaveProperty('ping');
+    expect(typeof api.ping).toBe('function');
+  });
 });

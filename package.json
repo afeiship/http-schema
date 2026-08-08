@@ -41,6 +41,7 @@
   ],
   "dependencies": {
     "@jswork/path-dual-parser": "^1.0.2",
+    "@jswork/universal-request-adapter-axios": "^1.0.7",
     "@jswork/universal-request-adapter-fetch": "^1.0.8",
     "@jswork/universal-request-core": "^1.0.8"
   }

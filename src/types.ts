@@ -1,4 +1,5 @@
 import type { DataType, InterceptorLike } from '@jswork/universal-request-core';
+export type { DataType, InterceptorLike };
 
 // DSL 叶子接口：name: [method, path, meta?]
 export type HttpSchemaLeaf = [

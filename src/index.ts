@@ -1,6 +1,7 @@
 import { createRequest } from '@jswork/universal-request-core';
 import type { RequestConfig } from '@jswork/universal-request-core';
 import { FetchAdapter } from '@jswork/universal-request-adapter-fetch';
+import { AxiosAdapter } from '@jswork/universal-request-adapter-axios';
 import { parse } from '@jswork/path-dual-parser';
 import type { ApiItem, ApiInstance, HttpSchemaConfig, HttpSchemaOptions } from './types';
 import { parse as parseSchema } from './parser';
@@ -55,9 +56,10 @@ function httpSchema(
 
   // 2. 创建 RequestCore 实例
   const baseURL = options?.baseURL ?? schema.baseURL ?? '';
+  const adapter = options?.adapter === 'Axios' ? new AxiosAdapter() : new FetchAdapter();
   const httpClient = createRequest({
     baseURL,
-    adapter: new FetchAdapter(),
+    adapter,
     interceptors: options?.interceptors,
   });
 
@@ -74,6 +76,7 @@ function httpSchema(
       const config: RequestConfig = {
         url: resolvedPath,
         method: item.method.toUpperCase() as any,
+        baseURL: item.baseURL || undefined,
         dataType: (options?.dataType ?? item.dataType) as any,
         ...callOptions,
       };
