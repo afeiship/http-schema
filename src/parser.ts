@@ -53,10 +53,10 @@ function parseItems(
         nameSuffix: item.suffix ?? ctx.nameSuffix,
       };
 
-      // 展开 resources
+      // 展开 resources（不传 namePrefix/nameSuffix，叶子分支统一处理）
       let mergedItems = item.items ?? {};
       if (item.resources && item.resources.length > 0) {
-        const resourceItems = normalizeResources(item.resources, subCtx.namePrefix, subCtx.nameSuffix);
+        const resourceItems = normalizeResources(item.resources, '', '');
         mergedItems = { ...resourceItems, ...mergedItems };
       }
 

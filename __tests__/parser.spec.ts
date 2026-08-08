@@ -121,4 +121,29 @@ describe('parse', () => {
     // 即使以 / 开头，也拼接前缀
     expect(result[0].fullPath).toBe('/base/absolute');
   });
+
+  it('should handle prefix/suffix with resources without double application', () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [
+        {
+          prefix: 'admin_',
+          suffix: 'V2',
+          resources: ['tags'],
+          items: {
+            tags_top: ['get', '/tags/top'],
+          }
+        }
+      ]
+    };
+    const result = parse(config);
+    // resources 生成的函数名应该只应用一次 prefix/suffix
+    expect(result.find(r => r.name === 'admin_tags_indexV2')).toBeDefined();
+    expect(result.find(r => r.name === 'admin_tags_topV2')).toBeDefined();
+    // 不应该出现双重应用
+    expect(result.find(r => r.name === 'admin_admin_tags_indexV2V2')).toBeUndefined();
+    // 同时验证 resources 展开数量正确（5 + 1）
+    expect(result.length).toBe(6);
+  });
 });
