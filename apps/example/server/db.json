@@ -1,9 +1,8 @@
 {
   "badges": [
     {
-      "id": 1,
-      "name": "Gold",
-      "icon": "🥇"
+      "name": "Updated Item",
+      "id": 1
     },
     {
       "id": 2,
@@ -54,9 +53,17 @@
   ],
   "categories": [
     {
-      "id": 2,
+      "id": 1,
       "name": "Life",
       "root": false
+    },
+    {
+      "name": "New Item",
+      "id": 2
+    },
+    {
+      "name": "New Item",
+      "id": 3
     }
   ],
   "tags": [
