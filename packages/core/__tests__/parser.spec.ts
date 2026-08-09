@@ -15,13 +15,15 @@ describe('parse', () => {
     const result = parse(config);
     expect(result).toHaveLength(2);
 
-    expect(result[0].name).toBe('ping');
+    expect(result[0].id).toBe('ping');
+    expect(result[0].key).toBe('ping');
     expect(result[0].method).toBe('get');
     expect(result[0].fullPath).toBe('/api/ping');
     expect(result[0].dataType).toBe('json');
     expect(result[0].baseURL).toBe('http://test.com');
 
-    expect(result[1].name).toBe('echo');
+    expect(result[1].id).toBe('echo');
+    expect(result[1].key).toBe('echo');
     expect(result[1].method).toBe('post');
     expect(result[1].fullPath).toBe('/api/echo');
     expect(result[1].config).toEqual({ tags: ['test'] });
@@ -42,7 +44,8 @@ describe('parse', () => {
     };
     const result = parse(config);
     expect(result).toHaveLength(1);
-    expect(result[0].name).toBe('user');
+    expect(result[0].id).toBe('user');
+    expect(result[0].key).toBe('user');
     expect(result[0].fullPath).toBe('/api/v2/user');
   });
 
@@ -62,8 +65,8 @@ describe('parse', () => {
     const result = parse(config);
     // tags_index/show/create/update/destroy + tags_top
     expect(result.length).toBe(6);
-    expect(result.find(r => r.name === 'tags_top')).toBeDefined();
-    expect(result.find(r => r.name === 'tags_index')).toBeDefined();
+    expect(result.find(r => r.id === 'tags_top')).toBeDefined();
+    expect(result.find(r => r.id === 'tags_index')).toBeDefined();
   });
 
   it('should handle prefix/suffix on function names', () => {
@@ -81,7 +84,8 @@ describe('parse', () => {
       ]
     };
     const result = parse(config);
-    expect(result[0].name).toBe('admin_dashboardV2');
+    expect(result[0].id).toBe('admin_dashboardV2');
+    expect(result[0].key).toBe('dashboard');
   });
 
   it('should handle custom baseURL override in group', () => {
@@ -139,10 +143,10 @@ describe('parse', () => {
     };
     const result = parse(config);
     // resources 生成的函数名应该只应用一次 prefix/suffix
-    expect(result.find(r => r.name === 'admin_tags_indexV2')).toBeDefined();
-    expect(result.find(r => r.name === 'admin_tags_topV2')).toBeDefined();
+    expect(result.find(r => r.id === 'admin_tags_indexV2')).toBeDefined();
+    expect(result.find(r => r.id === 'admin_tags_topV2')).toBeDefined();
     // 不应该出现双重应用
-    expect(result.find(r => r.name === 'admin_admin_tags_indexV2V2')).toBeUndefined();
+    expect(result.find(r => r.id === 'admin_admin_tags_indexV2V2')).toBeUndefined();
     // 同时验证 resources 展开数量正确（5 + 1）
     expect(result.length).toBe(6);
   });
