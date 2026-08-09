@@ -58,6 +58,54 @@ await api.badges_show({ id: 123 });
 await api.badges_create({ title: 'new badge' });
 ```
 
+### Typed API (多业务线同构接口)
+
+当业务存在多套同构 API（如研究生/本科接口路径不同、结构相同）时，用 `type` 分组 + `resolveType` 实现统一调用入口。
+
+```js
+// schema.ts —— type 分组，叶子统一用原始 key，无需 prefix
+export default {
+  baseURL: '/api',
+  items: [
+    {
+      type: 'graduate',
+      request: ['/api/v1', 'json'],
+      items: {
+        get_user_collects: ['get', '/apply7/resume/get_user_programs'],
+        hot_schools: ['get', '/recommend/hot_program_universities'],
+      }
+    },
+    {
+      type: 'undergraduate',
+      request: ['/api/v1', 'json'],
+      items: {
+        get_user_collects: ['get', '/recommend/get_user_colleges'],
+        hot_schools: ['get', '/recommend/hot_major_colleges'],
+      }
+    },
+  ]
+};
+```
+
+```js
+// api.ts —— resolveType 返回当前业务类型
+const api = httpSchema(schema, {
+  adapter: new FetchAdapter(),
+  resolveType: () => getUserType(),  // 'graduate' | 'undergraduate'
+});
+
+// 统一调用，自动路由到当前 type 的路径
+const collects = await api.typed('get_user_collects')({ userId: 1 });
+// resolveType='graduate'      → /api/v1/apply7/resume/get_user_programs
+// resolveType='undergraduate' → /recommend/get_user_colleges
+```
+
+**规则：**
+- `type` 与 `request`/`prefix` 同级，标识业务类型
+- type 分组内叶子用原始 key，无需 prefix/suffix（路径由 `request[0]` 拼接）
+- `api.typed(key)(data, options)` 每次调用执行 `resolveType` 动态路由
+- 普通分组完全不受影响，仍在 `api` 上平铺
+
 ### DSL rules
 
 | Rule | Description |
@@ -66,10 +114,12 @@ await api.badges_create({ title: 'new badge' });
 | request | `[prefix, format]` — 分组层级前缀，向下继承，`format` 映射到 `dataType` |
 | resources | 自动生成 RESTful 5个接口：`_index/_show/_create/_update/_destroy` |
 | 接口简写 | `name: [method, path, meta?]`，meta 支持 tags 等扩展 |
+| type | 分组级标识业务类型，叶子用原始 key，配合 resolveType 实现动态路由 |
 | path 占位符 | 支持 `{id}` 路径占位符，由 `path-dual-parser` 替换 |
 | path 拼接 | 路径始终拼接分组前缀栈（不以 `/` 跳过） |
 | baseURL | 全局继承，支持分组内覆盖 |
-| prefix/suffix | 作用于函数名，支持分组内覆盖 |
+| type | 分组级标识业务类型，叶子用原始 key，配合 resolveType 实现动态路由 |
+| prefix/suffix | 作用于函数名，支持分组内覆盖（type 分组内不生效） |
 
 ## API
 
@@ -86,6 +136,7 @@ httpSchema(schema, options): ApiInstance
 | dataType | `DataType` | schema request[1] | Default data serialization type |
 | interceptors | `InterceptorLike[]` | - | Universal-request interceptors |
 | transformResponse | `(res) => any` | - | Transform response before returning |
+| resolveType | `(data?, options?) => string` | - | Typed API 路由函数，返回当前业务类型 |
 
 ## Schema Types
 
@@ -107,6 +158,9 @@ interface HttpSchemaConfig {
   request?: [string, DataType];
   items?: HttpSchemaItem[] | Record<string, HttpSchemaLeaf>;
 }
+
+// Group item (in items array) supports type
+// { type?: string; request?: [string, DataType]; prefix?: string; items?: ... }
 ```
 
 ## Monorepo Structure

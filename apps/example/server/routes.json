@@ -1,4 +1,8 @@
 {
   "/categories/root": "/categories?root=true",
-  "/badges/top": "/badges?_limit=3"
+  "/badges/top": "/badges?_limit=3",
+  "/api/v1/apply7/resume/get_user_programs": "/graduate_programs",
+  "/api/v1/recommend/get_user_colleges": "/undergraduate_colleges",
+  "/api/v1/recommend/hot_program_universities": "/graduate_programs?_limit=2",
+  "/api/v1/recommend/hot_major_colleges": "/undergraduate_colleges?_limit=2"
 }

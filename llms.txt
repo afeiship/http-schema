@@ -12,6 +12,7 @@
 
 - [Parser Design](docs/superpowers/specs/2026-08-08-http-schema-parser-design.md): Full parser architecture and design
 - [Adapter Refactor](docs/superpowers/specs/2026-08-08-http-schema-adapter-refactor.md): Adapter de-internalization design
+- [Typed API](docs/superpowers/specs/2026-08-09-http-schema-typed-api.md): Multi-type typed API routing with resolveType
 
 ## Source
 

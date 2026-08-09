@@ -81,5 +81,45 @@
     "id": 1,
     "username": "admin",
     "email": "admin@example.com"
-  }
+  },
+  "graduate_programs": [
+    {
+      "id": 1,
+      "name": "Master of Computer Science",
+      "university": "MIT",
+      "type": "graduate"
+    },
+    {
+      "id": 2,
+      "name": "PhD in Physics",
+      "university": "Stanford",
+      "type": "graduate"
+    },
+    {
+      "id": 3,
+      "name": "MBA",
+      "university": "Harvard",
+      "type": "graduate"
+    }
+  ],
+  "undergraduate_colleges": [
+    {
+      "id": 1,
+      "name": "College of Engineering",
+      "university": "MIT",
+      "type": "undergraduate"
+    },
+    {
+      "id": 2,
+      "name": "College of Arts and Sciences",
+      "university": "Harvard",
+      "type": "undergraduate"
+    },
+    {
+      "id": 3,
+      "name": "College of Letters",
+      "university": "Stanford",
+      "type": "undergraduate"
+    }
+  ]
 }
