@@ -164,6 +164,22 @@ api.typed = (key: string) => {
 - 每次调用执行 `resolveType` 动态路由
 - 未定义 type 或 type 下无此 key 时抛清晰错误
 
+### 5.4 type 分组无需 prefix/suffix
+
+`prefix` 字段仅影响函数名（`namePrefix`），不影响 URL 路径（路径由 `request[0]` 与叶子 `path` 拼接决定）。由于 type 分组的 namePrefix/nameSuffix 已被重置为空，`prefix`/`suffix` 在 type 分组中**不生效、无需声明**。示例：
+
+```typescript
+{
+  type: 'undergraduate',   // 不写 prefix，函数自动存到 __typed__['undergraduate@...']
+  request: ['/api/v1', 'json'],
+  items: {
+    get_user_collects: ['get', '/recommend/get_user_colleges'],
+  }
+}
+```
+
+路径自动拼为 `/api/v1/recommend/get_user_colleges`。
+
 ## 六、边界情况
 
 1. **resolveType 未传**：typed API 调用时 `resolveType` 为 undefined，抛错误提示需先配置
@@ -181,7 +197,6 @@ const schema = {
   items: [
     {
       type: 'graduate',
-      prefix: 'graduate_',
       request: ['/api/v1', 'json'],
       items: {
         get_user_collects: ['get', '/apply7/resume/get_user_programs'],
@@ -191,7 +206,6 @@ const schema = {
     },
     {
       type: 'undergraduate',
-      prefix: 'undergraduate_',
       request: ['/api/v1', 'json'],
       items: {
         get_user_collects: ['get', '/recommend/get_user_colleges'],
