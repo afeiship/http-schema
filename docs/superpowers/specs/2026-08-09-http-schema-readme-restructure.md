@@ -57,6 +57,23 @@ description: 一句话说明
 | Schema Types 类型展示 | 删除（读者看源码即可） |
 | Monorepo Structure | 保留在 README |
 
+### Features 目录索引（在 README 末尾）
+
+```markdown
+## Features
+
+| # | Doc | Description |
+|---|-----|-------------|
+| 01 | [Basic Usage](docs/features/01-basic-usage.md) | DSL 定义 & 创建 API 实例 |
+| 02 | [RESTful Resources](docs/features/02-restful-resources.md) | CRUD 自动生成 |
+| 03 | [Typed API](docs/features/03-typed-api.md) | 多业务线同构接口 |
+| 04 | [Path Params](docs/features/04-path-params.md) | 路径占位符 `{id}` / `:param` |
+| 05 | [Prefix & Suffix](docs/features/05-prefix-suffix.md) | 函数名前缀/后缀 |
+| 06 | [Interceptors](docs/features/06-interceptors.md) | 请求拦截器 & transformResponse |
+| 07 | [Schema Config](docs/features/07-schema-config.md) | 完整配置项参考 |
+| 08 | [DSL Rules](docs/features/08-dsl-rules.md) | 全套 DSL 规则参考 |
+```
+
 ### Quick Start 示例（约 20 行）
 
 ```js
