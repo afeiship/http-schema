@@ -79,7 +79,7 @@ function httpSchema(
   const api: ApiInstance = {};
 
   items.forEach((item: ApiItem) => {
-    api[item.name] = (data?: any, callOptions?: Record<string, any>) => {
+    api[item.id] = (data?: any, callOptions?: Record<string, any>) => {
       // 替换路径占位符（path-to-regexp v8 需要 string 值）
       const [params, payload] = splitData(item.fullPath, data);
       const stringParams: Record<string, string> = {};
@@ -94,7 +94,8 @@ function httpSchema(
         method: item.method.toUpperCase() as any,
         baseURL: item.baseURL || undefined,
         dataType: (options?.dataType ?? item.dataType) as any,
-        name: item.name,
+        name: item.id,
+        key: item.key,
         ...item.config,
         ...callOptions,
       };
