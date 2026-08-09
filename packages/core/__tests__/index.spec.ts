@@ -109,7 +109,7 @@ describe('httpSchema', () => {
     expect(adapter.lastConfig?.tags).toEqual(['ni2lv']);
   });
 
-  it('should inject name into request config', async () => {
+  it('should inject name and key into request config', async () => {
     const adapter = new CaptureAdapter();
     const config: HttpSchemaConfig = {
       baseURL: 'http://test.com',
@@ -122,12 +122,14 @@ describe('httpSchema', () => {
     const api = httpSchema(config, { adapter });
     await api.categories_root();
     expect(adapter.lastConfig?.name).toBe('categories_root');
+    expect(adapter.lastConfig?.key).toBe('categories_root');
 
     await api.badges_top();
     expect(adapter.lastConfig?.name).toBe('badges_top');
+    expect(adapter.lastConfig?.key).toBe('badges_top');
   });
 
-  it('should allow callOptions to override name', async () => {
+  it('should allow callOptions to override name and key', async () => {
     const adapter = new CaptureAdapter();
     const config: HttpSchemaConfig = {
       baseURL: 'http://test.com',
@@ -137,7 +139,8 @@ describe('httpSchema', () => {
       }
     };
     const api = httpSchema(config, { adapter });
-    await api.ping(null, { name: 'custom_name' });
+    await api.ping(null, { name: 'custom_name', key: 'custom_key' });
     expect(adapter.lastConfig?.name).toBe('custom_name');
+    expect(adapter.lastConfig?.key).toBe('custom_key');
   });
 });
