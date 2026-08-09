@@ -68,15 +68,16 @@ function parseItems(
     });
   } else {
     // 对象：叶子节点
-    Object.entries(items).forEach(([key, leaf]) => {
+    Object.entries(items).forEach(([rawKey, leaf]) => {
       const [method, path, leafConfig] = leaf as HttpSchemaLeaf;
-      const name = ctx.namePrefix + key + ctx.nameSuffix;
+      const id = ctx.namePrefix + rawKey + ctx.nameSuffix;
       const fullPath = joinPaths(ctx.prefix, path);
       const mergedConfig = leafConfig
         ? { ...ctx.config, ...leafConfig }
         : ctx.config;
       result.push({
-        name,
+        id,
+        key: rawKey,
         method: method.toLowerCase(),
         fullPath,
         dataType: ctx.dataType,
