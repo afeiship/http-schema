@@ -3,38 +3,35 @@ import api from './api';
 
 const API_NAMES = Object.keys(api);
 
-// 根据函数名生成合理的调用参数
-// 命名约定: <resource>_<action> (index/show/create/update/destroy) 或 me
-function callArgs(name: string): any {
-  const action = name.split('_').pop();
-  switch (action) {
-    case 'index':
-      return undefined; // GET /badges
-    case 'show':
-      return { id: 1 }; // GET /badges/1
-    case 'create':
-      return { name: 'New Item' }; // POST /badges
-    case 'update':
-      return { id: 1, name: 'Updated Item' }; // PUT /badges/1
-    case 'destroy':
-      return { id: 1 }; // DELETE /badges/1
-    default:
-      return undefined; // me -> GET /me
-  }
-}
+// Interceptor 标签映射（硬编码，与 schema 和 interceptor 配置保持同步）
+const API_BADGES: Record<string, string[]> = {
+  v1_badges_top: ['paginate'],
+  v1_categories_root: ['paginate', 'by-name'],
+};
 
-// 根据函数名推断 HTTP method,用于标签展示
+const TAG_COLORS: Record<string, string> = {
+  paginate: 'bg-blue-100 text-blue-700',
+  'by-name': 'bg-orange-100 text-orange-700',
+};
+
 function methodOf(name: string): string {
   const action = name.split('_').pop();
   switch (action) {
-    case 'create':
-      return 'POST';
-    case 'update':
-      return 'PUT';
-    case 'destroy':
-      return 'DELETE';
-    default:
-      return 'GET';
+    case 'create': return 'POST';
+    case 'update': return 'PUT';
+    case 'destroy': return 'DELETE';
+    default: return 'GET';
+  }
+}
+
+function callArgs(name: string): any {
+  const action = name.split('_').pop();
+  switch (action) {
+    case 'show': return { id: 1 };
+    case 'create': return { name: 'New Item' };
+    case 'update': return { id: 1, name: 'Updated Item' };
+    case 'destroy': return { id: 1 };
+    default: return undefined;
   }
 }
 
@@ -56,73 +53,54 @@ function App() {
   };
 
   return (
-    <div style={{ padding: 24, fontFamily: 'system-ui, sans-serif' }}>
-      <h1>http-schema Example</h1>
-      <p style={{ color: '#666' }}>
-        Click any API function to call it. Responses are fetched from json-server
-        via fetch adapter.
+    <div className="p-6 font-sans max-w-6xl mx-auto">
+      <h1 className="text-2xl font-bold mb-1">http-schema Example</h1>
+      <p className="text-gray-500 text-sm mb-4">
+        Click any API function to call it. Responses are fetched from json-server via fetch adapter.
       </p>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 16 }}>
-        {API_NAMES.map((name) => (
-          <div
-            key={name}
-            style={{
-              border: '1px solid #ddd',
-              borderRadius: 8,
-              padding: 16,
-              width: 320,
-              background: loading === name ? '#f5f5f5' : '#fff',
-            }}
-          >
-            <div style={{ fontWeight: 600, marginBottom: 4 }}>
-              {name}
-              <span
-                style={{
-                  marginLeft: 8,
-                  fontSize: 11,
-                  padding: '2px 6px',
-                  borderRadius: 4,
-                  background: '#1890ff',
-                  color: '#fff',
-                }}
-              >
-                {methodOf(name)}
-              </span>
-            </div>
-            <button
-              onClick={() => callApi(name)}
-              disabled={loading === name}
-              style={{
-                padding: '6px 16px',
-                borderRadius: 4,
-                border: '1px solid #1890ff',
-                background: loading === name ? '#e6f7ff' : '#1890ff',
-                color: '#fff',
-                cursor: 'pointer',
-                fontSize: 13,
-              }}
-            >
-              {loading === name ? 'Loading...' : 'Call'}
-            </button>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {API_NAMES.map((name) => {
+          const badges = API_BADGES[name] ?? [];
+          const method = methodOf(name);
+          const result = results[name];
 
-            {results[name] && (
-              <pre
-                style={{
-                  marginTop: 8,
-                  padding: 8,
-                  background: '#f6f8fa',
-                  borderRadius: 4,
-                  fontSize: 12,
-                  overflow: 'auto',
-                  maxHeight: 200,
-                }}
+          return (
+            <div
+              key={name}
+              className={`border border-gray-200 rounded-lg p-4 ${loading === name ? 'bg-gray-50' : 'bg-white'}`}
+            >
+              <div className="font-semibold mb-2 text-sm flex items-center gap-2 flex-wrap">
+                {name}
+                <span className="text-[11px] px-1.5 py-0.5 rounded bg-sky-500 text-white font-medium">
+                  {method}
+                </span>
+                {badges.map((tag) => (
+                  <span
+                    key={tag}
+                    className={`text-[11px] px-1.5 py-0.5 rounded font-medium ${TAG_COLORS[tag] ?? 'bg-gray-100 text-gray-600'}`}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <button
+                onClick={() => callApi(name)}
+                disabled={loading === name}
+                className="px-4 py-1.5 rounded border border-sky-500 text-sm font-medium cursor-pointer disabled:cursor-not-allowed disabled:bg-sky-50 disabled:text-sky-300 disabled:border-sky-200 bg-sky-500 text-white hover:bg-sky-600 active:bg-sky-700"
               >
-                {JSON.stringify(results[name], null, 2)}
-              </pre>
-            )}
-          </div>
-        ))}
+                {loading === name ? 'Loading...' : 'Call'}
+              </button>
+
+              {result && (
+                <pre className="mt-2 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-48 border border-gray-100">
+                  {JSON.stringify(result, null, 2)}
+                </pre>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
