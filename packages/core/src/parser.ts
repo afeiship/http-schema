@@ -53,6 +53,7 @@ function parseItems(
         baseURL: item.baseURL ?? ctx.baseURL,
         prefix: item.request ? joinPaths(ctx.prefix, item.request[0]) : ctx.prefix,
         dataType: item.request?.[1] ?? ctx.dataType,
+        // 类型化分组：重置前缀/后缀，叶子统一使用原始 key
         namePrefix: item.type ? '' : (item.prefix ?? ctx.namePrefix),
         nameSuffix: item.type ? '' : (item.suffix ?? ctx.nameSuffix),
         type: item.type ?? ctx.type,
