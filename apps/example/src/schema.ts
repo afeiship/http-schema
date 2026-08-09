@@ -7,6 +7,7 @@ export default {
     },
     {
       request: ['', 'json'],
+      prefix: 'v1_',
       items: {
         me: ['get', '/me'],
         categories_root: ['get', '/categories/root', { tags: ['paginate'] }],

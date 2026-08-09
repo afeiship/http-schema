@@ -1,20 +1,55 @@
 {
   "badges": [
-    { "id": 1, "name": "Gold", "icon": "🥇" },
-    { "id": 2, "name": "Silver", "icon": "🥈" },
-    { "id": 3, "name": "Bronze", "icon": "🥉" }
+    {
+      "id": 1,
+      "name": "Gold",
+      "icon": "🥇"
+    },
+    {
+      "id": 2,
+      "name": "Silver",
+      "icon": "🥈"
+    },
+    {
+      "id": 3,
+      "name": "Bronze",
+      "icon": "🥉"
+    }
   ],
   "posts": [
-    { "id": 1, "title": "Hello World", "body": "This is the first post." },
-    { "id": 2, "title": "Second Post", "body": "Another post here." }
+    {
+      "id": 1,
+      "title": "Hello World",
+      "body": "This is the first post."
+    },
+    {
+      "id": 2,
+      "title": "Second Post",
+      "body": "Another post here."
+    }
   ],
   "categories": [
-    { "id": 1, "name": "Tech", "root": true },
-    { "id": 2, "name": "Life", "root": false }
+    {
+      "id": 1,
+      "name": "Tech",
+      "root": true
+    },
+    {
+      "id": 2,
+      "name": "Life",
+      "root": false
+    }
   ],
   "tags": [
-    { "id": 1, "name": "paginate", "description": "分页标签" },
-    { "id": 2, "name": "featured", "description": "精选" }
+    {
+      "name": "Updated Item",
+      "id": 1
+    },
+    {
+      "id": 2,
+      "name": "featured",
+      "description": "精选"
+    }
   ],
   "me": {
     "id": 1,
