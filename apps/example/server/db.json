@@ -14,6 +14,30 @@
       "id": 3,
       "name": "Bronze",
       "icon": "🥉"
+    },
+    {
+      "name": "New Item",
+      "id": 4
+    },
+    {
+      "name": "New Item",
+      "id": 5
+    },
+    {
+      "name": "New Item",
+      "id": 6
+    },
+    {
+      "name": "New Item",
+      "id": 7
+    },
+    {
+      "name": "New Item",
+      "id": 8
+    },
+    {
+      "name": "New Item",
+      "id": 9
     }
   ],
   "posts": [
@@ -29,11 +53,6 @@
     }
   ],
   "categories": [
-    {
-      "id": 1,
-      "name": "Tech",
-      "root": true
-    },
     {
       "id": 2,
       "name": "Life",
