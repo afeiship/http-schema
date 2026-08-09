@@ -23,6 +23,7 @@ export interface ResourceDef {
 
 // DSL 项目节点（分组或叶子）
 export interface HttpSchemaItem {
+  type?: string;         // 业务类型标识，继承自分组
   request?: [string, DataType];
   baseURL?: string;
   prefix?: string;

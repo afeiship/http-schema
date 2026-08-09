@@ -218,4 +218,69 @@ describe('parse', () => {
       meta: { tags: ['test'] },
     });
   });
+
+  it('should propagate type from group to ApiItem', () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [
+        {
+          type: 'graduate',
+          request: ['/v1', 'json'],
+          items: {
+            get_user_collects: ['get', '/collects'],
+            delete_user_collect: ['post', '/collects/delete'],
+          }
+        }
+      ]
+    };
+    const result = parse(config);
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe('get_user_collects');
+    expect(result[0].key).toBe('get_user_collects');
+    expect(result[0].type).toBe('graduate');
+    expect(result[1].id).toBe('delete_user_collect');
+    expect(result[1].key).toBe('delete_user_collect');
+    expect(result[1].type).toBe('graduate');
+  });
+
+  it('should reset prefix/suffix for typed groups', () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [
+        {
+          type: 'graduate',
+          prefix: 'should_be_ignored_',
+          suffix: 'V2',
+          request: ['/v1', 'json'],
+          items: {
+            get_user_collects: ['get', '/collects'],
+          }
+        }
+      ]
+    };
+    const result = parse(config);
+    expect(result[0].id).toBe('get_user_collects');
+    expect(result[0].key).toBe('get_user_collects');
+  });
+
+  it('should preserve existing behavior for non-typed groups', () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [
+        {
+          prefix: 'v1_',
+          items: {
+            me: ['get', '/me'],
+          }
+        }
+      ]
+    };
+    const result = parse(config);
+    expect(result[0].id).toBe('v1_me');
+    expect(result[0].key).toBe('me');
+    expect(result[0].type).toBeUndefined();
+  });
 });

@@ -17,6 +17,7 @@ interface ParseContext {
   dataType: DataType;
   namePrefix: string;   // 函数名前缀
   nameSuffix: string;   // 函数名后缀
+  type?: string;        // 业务类型标识，继承自分组
   config: Partial<RequestConfig>;
 }
 
@@ -52,8 +53,9 @@ function parseItems(
         baseURL: item.baseURL ?? ctx.baseURL,
         prefix: item.request ? joinPaths(ctx.prefix, item.request[0]) : ctx.prefix,
         dataType: item.request?.[1] ?? ctx.dataType,
-        namePrefix: item.prefix ?? ctx.namePrefix,
-        nameSuffix: item.suffix ?? ctx.nameSuffix,
+        namePrefix: item.type ? '' : (item.prefix ?? ctx.namePrefix),
+        nameSuffix: item.type ? '' : (item.suffix ?? ctx.nameSuffix),
+        type: item.type ?? ctx.type,
         config: item.config ? { ...ctx.config, ...item.config } : ctx.config,
       };
 
@@ -78,6 +80,7 @@ function parseItems(
       result.push({
         id,
         key: rawKey,
+        type: ctx.type,
         method: method.toLowerCase(),
         fullPath,
         dataType: ctx.dataType,
