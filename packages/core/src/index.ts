@@ -62,6 +62,10 @@ function httpSchema(
   // 1. 解析 DSL → 扁平 ApiItem[]
   const items = parseSchema(schema);
 
+  // 分类：typed items vs normal items
+  const typedItems = items.filter((item) => item.type);
+  const normalItems = items.filter((item) => !item.type);
+
   // 2. 校验 adapter 必须传入
   if (!options?.adapter) {
     throw new Error('httpSchema: adapter is required (e.g. new FetchAdapter())');
@@ -78,7 +82,7 @@ function httpSchema(
   // 4. 构建 api 实例
   const api: ApiInstance = {};
 
-  items.forEach((item: ApiItem) => {
+  normalItems.forEach((item: ApiItem) => {
     api[item.id] = (data?: any, callOptions?: Record<string, any>) => {
       // 替换路径占位符（path-to-regexp v8 需要 string 值）
       const [params, payload] = splitData(item.fullPath, data);
@@ -115,6 +119,63 @@ function httpSchema(
       });
     };
   });
+
+  // typed API：通过 resolveType 动态路由
+  if (typedItems.length > 0) {
+    api.typed = (key: string) => {
+      return (data?: any, callOptions?: Record<string, any>) => {
+        const type = options?.resolveType?.(data, callOptions);
+        if (!type) {
+          return Promise.reject(
+            new Error(`httpSchema: resolveType returned "${type}" for key "${key}". Ensure resolveType is configured and returns a non-empty string.`)
+          );
+        }
+
+        const item = typedItems.find((i) => i.type === type && i.key === key);
+        if (!item) {
+          const available = typedItems
+            .filter((i) => i.type === type)
+            .map((i) => i.key);
+          return Promise.reject(
+            new Error(
+              `httpSchema: type "${type}" has no API key "${key}". ` +
+              `Available keys for this type: ${available.join(', ')}`
+            )
+          );
+        }
+
+        // 复用现有请求逻辑
+        const [params, payload] = splitData(item.fullPath, data);
+        const stringParams: Record<string, string> = {};
+        for (const [k, v] of Object.entries(params)) {
+          stringParams[k] = String(v);
+        }
+        const resolvedPath = parse(item.fullPath, stringParams);
+
+        const config: RequestConfig = {
+          url: resolvedPath,
+          method: item.method.toUpperCase() as any,
+          baseURL: item.baseURL || undefined,
+          dataType: (options?.dataType ?? item.dataType) as any,
+          id: item.id,
+          key: item.key,
+          ...item.config,
+          ...callOptions,
+        };
+
+        if (payload !== undefined) {
+          config.payload = payload;
+        }
+
+        return httpClient.request(config).then((res) => {
+          if (options?.transformResponse) {
+            return options.transformResponse(res);
+          }
+          return res;
+        });
+      };
+    };
+  }
 
   return api;
 }

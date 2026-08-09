@@ -144,3 +144,162 @@ describe('httpSchema', () => {
     expect(adapter.lastConfig?.key).toBe('custom_key');
   });
 });
+
+describe('typed API', () => {
+  it('should expose api.typed as a function', () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [
+        {
+          type: 'graduate',
+          request: ['/v1', 'json'],
+          items: {
+            get_user_collects: ['get', '/collects'],
+          }
+        }
+      ]
+    };
+    const api = httpSchema(config, {
+      adapter: new FetchAdapter(),
+      resolveType: () => 'graduate',
+    });
+    expect(api).toHaveProperty('typed');
+    expect(typeof api.typed).toBe('function');
+    const fn = api.typed('get_user_collects');
+    expect(typeof fn).toBe('function');
+  });
+
+  it('should route to correct path via resolveType', async () => {
+    const adapter = new CaptureAdapter();
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [
+        {
+          type: 'graduate',
+          request: ['/v1', 'json'],
+          items: {
+            get_user_collects: ['get', '/collects'],
+          }
+        },
+        {
+          type: 'undergraduate',
+          request: ['/v1', 'json'],
+          items: {
+            get_user_collects: ['get', '/colleges'],
+          }
+        }
+      ]
+    };
+    const api = httpSchema(config, {
+      adapter,
+      resolveType: () => 'graduate',
+    });
+    await api.typed('get_user_collects')({ userId: 1 });
+    expect(adapter.lastConfig?.url).toBe('/api/v1/collects');
+  });
+
+  it('should return different routes for different types', async () => {
+    const adapter = new CaptureAdapter();
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [
+        {
+          type: 'graduate',
+          request: ['/v1', 'json'],
+          items: {
+            get_user_collects: ['get', '/collects'],
+          }
+        },
+        {
+          type: 'undergraduate',
+          request: ['/v1', 'json'],
+          items: {
+            get_user_collects: ['get', '/colleges'],
+          }
+        }
+      ]
+    };
+    const apiGraduate = httpSchema(config, { adapter, resolveType: () => 'graduate' });
+    await apiGraduate.typed('get_user_collects')({ userId: 1 });
+    expect(adapter.lastConfig?.url).toBe('/api/v1/collects');
+
+    const apiUndergrad = httpSchema(config, { adapter, resolveType: () => 'undergraduate' });
+    await apiUndergrad.typed('get_user_collects')({ userId: 1 });
+    expect(adapter.lastConfig?.url).toBe('/api/v1/colleges');
+  });
+
+  it('should throw when resolveType returns undefined', async () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [{
+        type: 'graduate',
+        request: ['/v1', 'json'],
+        items: { get_user_collects: ['get', '/collects'] }
+      }]
+    };
+    const api = httpSchema(config, { adapter: new FetchAdapter(), resolveType: () => '' as any });
+    await expect(api.typed('get_user_collects')({})).rejects.toThrow(/resolveType/);
+  });
+
+  it('should throw when resolveType returns unknown type', async () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [{
+        type: 'graduate',
+        request: ['/v1', 'json'],
+        items: { get_user_collects: ['get', '/collects'] }
+      }]
+    };
+    const api = httpSchema(config, { adapter: new FetchAdapter(), resolveType: () => 'unknown' });
+    await expect(api.typed('get_user_collects')({})).rejects.toThrow(/unknown/);
+  });
+
+  it('should throw when resolveType is not configured', async () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [{
+        type: 'graduate',
+        request: ['/v1', 'json'],
+        items: { get_user_collects: ['get', '/collects'] }
+      }]
+    };
+    const api = httpSchema(config, { adapter: new FetchAdapter() } as any);
+    await expect(api.typed('get_user_collects')({})).rejects.toThrow(/resolveType/);
+  });
+
+  it('should throw when type has no matching key', async () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [{
+        type: 'graduate',
+        request: ['/v1', 'json'],
+        items: { get_user_collects: ['get', '/collects'] }
+      }]
+    };
+    const api = httpSchema(config, { adapter: new FetchAdapter(), resolveType: () => 'graduate' });
+    await expect(api.typed('nonexistent_key')({})).rejects.toThrow(/nonexistent_key/);
+  });
+
+  it('should coexist with normal API keys', () => {
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: [
+        { type: 'graduate', request: ['/v1', 'json'], items: { ping: ['get', '/ping'] } },
+        { items: { admin_login: ['post', '/admin/login'] } },
+      ]
+    };
+    const api = httpSchema(config, { adapter: new FetchAdapter(), resolveType: () => 'graduate' });
+    expect(api).toHaveProperty('admin_login');
+    expect(typeof api.admin_login).toBe('function');
+    expect(typeof api.typed).toBe('function');
+    expect(typeof api.typed('ping')).toBe('function');
+  });
+});
