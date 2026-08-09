@@ -3,7 +3,7 @@ export default {
   request: ['', 'json'],
   items: [
     {
-      resources: ['badges', 'posts', 'categories', 'tags'],
+      resources: ['badges', 'categories'],
     },
     {
       request: ['', 'json'],
