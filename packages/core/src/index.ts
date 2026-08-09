@@ -94,7 +94,7 @@ function httpSchema(
         method: item.method.toUpperCase() as any,
         baseURL: item.baseURL || undefined,
         dataType: (options?.dataType ?? item.dataType) as any,
-        name: item.id,
+        id: item.id,
         key: item.key,
         ...item.config,
         ...callOptions,
