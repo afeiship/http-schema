@@ -45,7 +45,8 @@ export interface HttpSchemaConfig {
 
 // 解析后的扁平接口项
 export interface ApiItem {
-  name: string;
+  id: string;
+  key: string;
   method: string;
   fullPath: string;
   dataType: DataType;
