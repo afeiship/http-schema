@@ -256,7 +256,7 @@ describe('typed API', () => {
       }]
     };
     const api = httpSchema(config, { adapter: new FetchAdapter(), resolveType: () => 'unknown' });
-    await expect(api.typed('get_user_collects')({})).rejects.toThrow(/unknown/);
+    await expect(api.typed('get_user_collects')({})).rejects.toThrow(/has no API key/);
   });
 
   it('should throw when resolveType is not configured', async () => {

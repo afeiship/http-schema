@@ -127,7 +127,7 @@ function httpSchema(
         const type = options?.resolveType?.(data, callOptions);
         if (!type) {
           return Promise.reject(
-            new Error(`httpSchema: resolveType returned "${type}" for key "${key}". Ensure resolveType is configured and returns a non-empty string.`)
+            new Error(`httpSchema: resolveType not configured or returned empty for key "${key}". Ensure resolveType is configured and returns a non-empty string.`)
           );
         }
 
