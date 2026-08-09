@@ -47,6 +47,7 @@ export interface HttpSchemaConfig {
 export interface ApiItem {
   id: string;
   key: string;
+  type?: string;
   method: string;
   fullPath: string;
   dataType: DataType;
@@ -61,6 +62,7 @@ export interface HttpSchemaOptions {
   adapter?: Adapter;
   interceptors?: InterceptorLike[];
   transformResponse?: (res: any) => any;
+  resolveType?: (data?: any, options?: Record<string, any>) => string;
 }
 
 // 生成的 api 函数签名
