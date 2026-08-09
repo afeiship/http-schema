@@ -108,4 +108,36 @@ describe('httpSchema', () => {
     await api.categories_root();
     expect(adapter.lastConfig?.tags).toEqual(['ni2lv']);
   });
+
+  it('should inject name into request config', async () => {
+    const adapter = new CaptureAdapter();
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: {
+        categories_root: ['get', '/categories/root'],
+        badges_top: ['get', '/badges/top'],
+      }
+    };
+    const api = httpSchema(config, { adapter });
+    await api.categories_root();
+    expect(adapter.lastConfig?.name).toBe('categories_root');
+
+    await api.badges_top();
+    expect(adapter.lastConfig?.name).toBe('badges_top');
+  });
+
+  it('should allow callOptions to override name', async () => {
+    const adapter = new CaptureAdapter();
+    const config: HttpSchemaConfig = {
+      baseURL: 'http://test.com',
+      request: ['/api', 'json'],
+      items: {
+        ping: ['get', '/ping'],
+      }
+    };
+    const api = httpSchema(config, { adapter });
+    await api.ping(null, { name: 'custom_name' });
+    expect(adapter.lastConfig?.name).toBe('custom_name');
+  });
 });
