@@ -1,31 +1,8 @@
 import { createRequest } from '@jswork/universal-request-core';
 import type { RequestConfig } from '@jswork/universal-request-core';
-import { parse } from '@jswork/path-dual-parser';
+import { parse, params as extractParams } from '@jswork/path-dual-parser';
 import type { ApiItem, ApiInstance, HttpSchemaConfig, HttpSchemaOptions } from './types';
 import { parse as parseSchema } from './parser';
-
-/**
- * 从路径中提取模板参数名
- * 支持 {param} 和 :param 两种语法
- */
-function extractParams(path: string): string[] {
-  const params: string[] = [];
-  // 匹配 {param} 和 :param 两种风格
-  const braceRe = /\{(\w+)\}/g;
-  const colonRe = /:(\w+)/g;
-  let match: RegExpExecArray | null;
-
-  while ((match = braceRe.exec(path)) !== null) {
-    params.push(match[1]);
-  }
-  while ((match = colonRe.exec(path)) !== null) {
-    if (!params.includes(match[1])) {
-      params.push(match[1]);
-    }
-  }
-
-  return params;
-}
 
 /**
  * 将 data 拆分为路径参数和请求体
@@ -49,6 +26,47 @@ function splitData(path: string, data: any): [Record<string, any>, any] {
 
   const hasBody = Object.keys(body).length > 0;
   return [params, hasBody ? body : undefined];
+}
+
+/**
+ * 共享请求执行逻辑
+ */
+function executeRequest(opts: {
+  item: ApiItem;
+  data: any;
+  callOptions?: Record<string, any>;
+  httpClient: ReturnType<typeof createRequest>;
+  options?: HttpSchemaOptions;
+}): Promise<any> {
+  const { item, data, callOptions, httpClient, options } = opts;
+  const [params, payload] = splitData(item.fullPath, data);
+  const stringParams: Record<string, string> = {};
+  for (const [k, v] of Object.entries(params)) {
+    stringParams[k] = String(v);
+  }
+  const resolvedPath = parse(item.fullPath, stringParams);
+
+  const config: RequestConfig = {
+    url: resolvedPath,
+    method: item.method.toUpperCase() as any,
+    baseURL: item.baseURL || undefined,
+    dataType: (options?.dataType ?? item.dataType) as any,
+    id: item.id,
+    key: item.key,
+    ...item.config,
+    ...callOptions,
+  };
+
+  if (payload !== undefined) {
+    config.payload = payload;
+  }
+
+  return httpClient.request(config).then((res) => {
+    if (options?.transformResponse) {
+      return options.transformResponse(res);
+    }
+    return res;
+  });
 }
 
 /**
@@ -83,41 +101,8 @@ function httpSchema(
   const api: ApiInstance = {};
 
   normalItems.forEach((item: ApiItem) => {
-    api[item.id] = (data?: any, callOptions?: Record<string, any>) => {
-      // 替换路径占位符（path-to-regexp v8 需要 string 值）
-      const [params, payload] = splitData(item.fullPath, data);
-      const stringParams: Record<string, string> = {};
-      for (const [k, v] of Object.entries(params)) {
-        stringParams[k] = String(v);
-      }
-      const resolvedPath = parse(item.fullPath, stringParams);
-
-      // 构建请求配置
-      const config: RequestConfig = {
-        url: resolvedPath,
-        method: item.method.toUpperCase() as any,
-        baseURL: item.baseURL || undefined,
-        dataType: (options?.dataType ?? item.dataType) as any,
-        id: item.id,
-        key: item.key,
-        ...item.config,
-        ...callOptions,
-      };
-
-      // GET/HEAD/DELETE 时 payload 由 adapter 作为 query string；
-      // 其他方法作为请求体。adapter 的 buildURL 已处理该路由。
-      if (payload !== undefined) {
-        config.payload = payload;
-      }
-
-      // 发起请求
-      return httpClient.request(config).then((res) => {
-        if (options?.transformResponse) {
-          return options.transformResponse(res);
-        }
-        return res;
-      });
-    };
+    api[item.id] = (data?: any, callOptions?: Record<string, any>) =>
+      executeRequest({ item, data, callOptions, httpClient, options });
   });
 
   // typed API：通过 resolveType 动态路由
@@ -145,34 +130,7 @@ function httpSchema(
         }
 
         // 复用现有请求逻辑
-        const [params, payload] = splitData(item.fullPath, data);
-        const stringParams: Record<string, string> = {};
-        for (const [k, v] of Object.entries(params)) {
-          stringParams[k] = String(v);
-        }
-        const resolvedPath = parse(item.fullPath, stringParams);
-
-        const config: RequestConfig = {
-          url: resolvedPath,
-          method: item.method.toUpperCase() as any,
-          baseURL: item.baseURL || undefined,
-          dataType: (options?.dataType ?? item.dataType) as any,
-          id: item.id,
-          key: item.key,
-          ...item.config,
-          ...callOptions,
-        };
-
-        if (payload !== undefined) {
-          config.payload = payload;
-        }
-
-        return httpClient.request(config).then((res) => {
-          if (options?.transformResponse) {
-            return options.transformResponse(res);
-          }
-          return res;
-        });
+        return executeRequest({ item, data, callOptions, httpClient, options });
       };
     };
   }
