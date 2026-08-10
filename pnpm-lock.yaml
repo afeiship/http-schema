@@ -60,8 +60,8 @@ importers:
   packages/core:
     dependencies:
       '@jswork/path-dual-parser':
-        specifier: ^1.0.2
-        version: 1.0.2
+        specifier: ^1.0.3
+        version: 1.0.3
       '@jswork/universal-request-core':
         specifier: ^1.0.11
         version: 1.0.11
@@ -520,8 +520,8 @@ packages:
   '@jswork/nice-comments@1.0.4':
     resolution: {integrity: sha512-iQxfM+ix67RJFNU519bvdTxpvEj9OtMSn/WTcnAlvxgm2sqtu7+iYOv16J3gYgu2+O15pTrEjaPm9jebvwT8+Q==}
 
-  '@jswork/path-dual-parser@1.0.2':
-    resolution: {integrity: sha512-NyKhLFlh47b5lsMcbnzal9svL3rRSUAnMPebm6O3jnK63Lp6iZVRGfvHSYjAXV++c/9trUZIyMIQKdwVz3MT3A==}
+  '@jswork/path-dual-parser@1.0.3':
+    resolution: {integrity: sha512-QKbnqS6kjxs+cUusYq7Bskrx+u2xm7kIj3MOHvolbXDKUcZLgsvP6SPLmFEPgri49lKVaBl+lM/aKN2M0rDAgg==}
 
   '@jswork/pipe@1.1.2':
     resolution: {integrity: sha512-zbgzUiFG1JqlmLrDiGqtyBMNIgolMWuLwgf7ALTwwVjHxamPbjPv63WqAPXA1MGOUsTn/Jz7sKmiBcqiPrxxJA==}
@@ -2663,7 +2663,7 @@ snapshots:
 
   '@jswork/nice-comments@1.0.4': {}
 
-  '@jswork/path-dual-parser@1.0.2':
+  '@jswork/path-dual-parser@1.0.3':
     dependencies:
       path-to-regexp: 8.4.2
 
