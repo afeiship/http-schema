@@ -28,13 +28,14 @@
 抽取共享函数 `executeRequest`：
 
 ```typescript
-function executeRequest(
-  item: ApiItem,
-  data: any,
-  callOptions: Record<string, any> | undefined,
-  httpClient: ReturnType<typeof createRequest>,
-  options: HttpSchemaOptions | undefined,
-): Promise<any> {
+function executeRequest(opts: {
+  item: ApiItem;
+  data: any;
+  callOptions?: Record<string, any>;
+  httpClient: ReturnType<typeof createRequest>;
+  options?: HttpSchemaOptions;
+}): Promise<any> {
+  const { item, data, callOptions, httpClient, options } = opts;
   const [params, payload] = splitData(item.fullPath, data);
   const stringParams: Record<string, string> = {};
   for (const [k, v] of Object.entries(params)) {
@@ -66,15 +67,15 @@ function executeRequest(
 }
 ```
 
-两处调用点简化为：
+两处调用点简化为（单对象传参）：
 
 ```typescript
 // normalItems 中
 api[item.id] = (data, callOptions) =>
-  executeRequest(item, data, callOptions, httpClient, options);
+  executeRequest({ item, data, callOptions, httpClient, options });
 
 // typed 中 — 查找 item 后
-return executeRequest(item, data, callOptions, httpClient, options);
+return executeRequest({ item, data, callOptions, httpClient, options });
 ```
 
 ### 3. 变更清单
