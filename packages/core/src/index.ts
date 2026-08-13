@@ -98,7 +98,7 @@ function httpSchema(
   });
 
   // 4. 构建 api 实例
-  const api: ApiInstance = {
+  const api = {
     typed: (key: string) => {
       return (data?: any, callOptions?: Record<string, any>) => {
         const type = options?.resolveType?.(data, callOptions);
@@ -125,7 +125,7 @@ function httpSchema(
         return executeRequest({ item, data, callOptions, httpClient, options });
       };
     },
-  };
+  } as ApiInstance;
 
   normalItems.forEach((item: ApiItem) => {
     api[item.id] = (data?: any, callOptions?: Record<string, any>) =>
