@@ -1,6 +1,6 @@
 {
   "name": "@jswork/http-schema",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "description": "A parser for HTTP schema DSL, supporting RESTful APIs and path parsing.",
   "npmClient": "pnpm",
   "main": "dist/index.cjs.js",
