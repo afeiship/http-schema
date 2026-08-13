@@ -73,5 +73,6 @@ export interface ApiFunction {
 
 // 完整 api 实例类型
 export interface ApiInstance {
-  [key: string]: ApiFunction | ((key: any) => ApiFunction);
+  [key: string]: ApiFunction | ((key: string) => ApiFunction);
+  typed: (key: string) => ApiFunction;
 }

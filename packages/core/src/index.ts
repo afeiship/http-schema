@@ -98,16 +98,8 @@ function httpSchema(
   });
 
   // 4. 构建 api 实例
-  const api: ApiInstance = {};
-
-  normalItems.forEach((item: ApiItem) => {
-    api[item.id] = (data?: any, callOptions?: Record<string, any>) =>
-      executeRequest({ item, data, callOptions, httpClient, options });
-  });
-
-  // typed API：通过 resolveType 动态路由
-  if (typedItems.length > 0) {
-    api.typed = (key: string) => {
+  const api: ApiInstance = {
+    typed: (key: string) => {
       return (data?: any, callOptions?: Record<string, any>) => {
         const type = options?.resolveType?.(data, callOptions);
         if (!type) {
@@ -132,8 +124,13 @@ function httpSchema(
         // 复用现有请求逻辑
         return executeRequest({ item, data, callOptions, httpClient, options });
       };
-    };
-  }
+    },
+  };
+
+  normalItems.forEach((item: ApiItem) => {
+    api[item.id] = (data?: any, callOptions?: Record<string, any>) =>
+      executeRequest({ item, data, callOptions, httpClient, options });
+  });
 
   return api;
 }

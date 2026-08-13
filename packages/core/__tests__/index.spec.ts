@@ -57,7 +57,9 @@ describe('httpSchema', () => {
 
   it('should handle empty schema', () => {
     const api = httpSchema({}, { adapter: new FetchAdapter() });
-    expect(api).toEqual({});
+    // typed 始终挂载（与 ApiInstance 类型定义一致），不含任何接口函数
+    expect(Object.keys(api).filter((k) => k !== 'typed')).toEqual([]);
+    expect(typeof api.typed).toBe('function');
   });
 
   it('should work with options overrides', () => {
