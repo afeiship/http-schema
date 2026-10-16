@@ -145,6 +145,29 @@ describe('httpSchema', () => {
     expect(adapter.lastConfig?.id).toBe('custom_id');
     expect(adapter.lastConfig?.key).toBe('custom_key');
   });
+
+  it('should handle environments without FormData without throwing', async () => {
+    const originalFormData = globalThis.FormData;
+    try {
+      // @ts-ignore
+      delete globalThis.FormData;
+
+      const adapter = new CaptureAdapter();
+      const config: HttpSchemaConfig = {
+        baseURL: 'http://test.com',
+        request: ['/api', 'json'],
+        items: {
+          test: ['post', '/users/:id'],
+        }
+      };
+      const api = httpSchema(config, { adapter });
+      await api.test({ id: '123', name: 'afei' });
+      expect(adapter.lastConfig?.url).toBe('/api/users/123');
+      expect(adapter.lastConfig?.payload).toEqual({ name: 'afei' });
+    } finally {
+      globalThis.FormData = originalFormData;
+    }
+  });
 });
 
 describe('typed API', () => {

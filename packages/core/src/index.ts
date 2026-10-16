@@ -9,7 +9,8 @@ import { parse as parseSchema } from './parser';
  */
 function splitData(path: string, data: any): [Record<string, any>, any] {
   if (data == null) return [{}, undefined];
-  if (typeof data !== 'object' || Array.isArray(data) || data instanceof FormData) {
+  const isFormData = typeof FormData !== 'undefined' && data instanceof FormData;
+  if (typeof data !== 'object' || Array.isArray(data) || isFormData) {
     return [{}, data];
   }
 
