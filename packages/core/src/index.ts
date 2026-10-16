@@ -136,4 +136,5 @@ function httpSchema(
   return api;
 }
 
+export * from './types';
 export default httpSchema;

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'bun:test';
 import { FetchAdapter } from '@jswork/universal-request-adapter-fetch';
 import type { RequestConfig } from '@jswork/universal-request-core';
 import httpSchema from '../src/index';
-import type { HttpSchemaConfig } from '../src/types';
+import type { HttpSchemaConfig, ApiInstance } from '../src/index';
 
 // 自定义适配器，用于捕获请求配置
 class CaptureAdapter extends FetchAdapter {
